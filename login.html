@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ChatApp – Login</title>
+
+  <!-- Modern minimal font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- tsparticles -->
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --glass: rgba(0, 0, 0, 0.45);
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #ffffff;
+      --muted: #cccccc;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: "Inter", sans-serif;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      background: radial-gradient(circle at top, #0a152c, #000000 75%);
+    }
+
+    /* tsparticles behind */
+    #tsparticles {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    /* glass login card */
+    .login-card {
+      width: 360px;
+      padding: 32px;
+      background: var(--glass);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+      animation: fadeUp 0.7s ease;
+      text-align: center;
+      z-index: 2;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-weight: 500;
+      font-size: 26px;
+    }
+
+    p.subtitle {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Inputs */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 14px;
+      outline: none;
+      transition: 0.25s;
+    }
+
+    input:focus {
+      border-color: #ffffffaa;
+      background: rgba(255,255,255,0.12);
+      box-shadow: 0 0 8px rgba(255,255,255,0.25);
+    }
+
+    /* Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.25s;
+      backdrop-filter: blur(8px);
+    }
+
+    button:hover {
+      background: rgba(255,255,255,0.22);
+      transform: translateY(-2px);
+      box-shadow: 0 0 12px rgba(255,255,255,0.28);
+    }
+
+    /* Error message */
+    #result {
+      margin-top: 12px;
+      font-size: 14px;
+      min-height: 20px;
+      color: #ff8f8f;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div id="tsparticles"></div>
+
+  <div class="login-card">
+    <h2>ChatApp</h2>
+    <p class="subtitle">Login to continue</p>
+
+    <input id="userId" placeholder="Secret ID (leave empty to register)" />
+    <input id="name" placeholder="Display name (new users)" />
+    <input id="password" type="password" placeholder="Password" />
+
+    <button id="loginBtn">Continue</button>
+
+    <p id="result"></p>
+  </div>
+
+  <script>
+    /* tsparticles config: white soft floating stars */
+    tsParticles.load("tsparticles", {
+      background: { color: "transparent" },
+      particles: {
+        number: { value: 90 },
+        size: { value: 1.4 },
+        move: { speed: 0.1 },
+        opacity: { value: 0.6 },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+      },
+      interactivity: {
+        events: { onhover: { enable: false }, onclick: { enable: false } },
+      },
+      detectRetina: true,
+    });
+
+    const API_URL = location.origin;
+
+    document.getElementById("loginBtn").onclick = async () => {
+      const userId = document.getElementById("userId").value.trim();
+      const name = document.getElementById("name").value.trim();
+      const password = document.getElementById("password").value;
+
+      try {
+        const res = await fetch(`${API_URL}/api/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: userId || undefined, name, password }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const user = data.user;
+          localStorage.setItem("user", JSON.stringify(user));
+          window.location.href = "/index.html";
+        } else {
+          document.getElementById("result").textContent =
+            data.message || data.error || "Login failed";
+        }
+      } catch (err) {
+        document.getElementById("result").textContent = "Network error";
+      }
+    };
+  </script>
+
+</body>
+</html>

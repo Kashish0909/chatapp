@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>ChatApp</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+  <div class="desktop-container glass-panel">
+    <aside class="sidebar">
+      <header class="sidebar-header">
+        <div class="user-info">
+          <div class="avatar-wrapper"><img id="userAvatar" class="avatar" src="" /><div class="status-dot"></div></div>
+          <div><div id="userName">User</div><div id="userIdDisplay"></div></div>
+        </div>
+        <div class="header-icons">
+          <i class="fas fa-plus-circle" id="newChatBtn" title="New Chat"></i>
+          <i class="fas fa-power-off" id="logoutBtn" title="Logout"></i>
+        </div>
+      </header>
+
+      <div class="sidebar-search"><div class="search-wrapper"><i class="fas fa-search"></i><input placeholder="Search..." /></div></div>
+
+      <div class="chat-list custom-scroll" id="chatList"></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="chat-header">
+        <img id="active-chat-avatar" class="avatar" src="" style="opacity:0" />
+        <div class="header-title neon-text-blue" id="active-chat-name">Select a chat</div>
+        <div class="header-icons"><i class="fas fa-user-plus" id="addPeopleBtn" title="Add People"></i></div>
+      </header>
+
+      <div class="message-area custom-scroll"></div>
+
+      <footer class="chat-input-footer">
+        <i class="fas fa-paperclip"></i>
+        <input id="messageInput" placeholder="Type a message..." />
+        <i class="fas fa-paper-plane" id="sendBtn"></i>
+      </footer>
+    </main>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
